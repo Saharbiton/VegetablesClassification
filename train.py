@@ -12,7 +12,7 @@ train_dir = path + 'train'
 vali_dir = path + 'validation'
 
 # Parametros
-batch_size = 32
+batch_size = 64
 img_height = 100
 img_width = 100
 epochs = 10
@@ -32,11 +32,13 @@ image_train_data = image_data.flow_from_directory(
 image_vali_data = image_data.flow_from_directory(
     vali_dir, target_size=(img_height, img_width), class_mode='categorical', batch_size=batch_size, subset='validation')
 
-# Creación del modelo
+# Model Creation
 model = Sequential([
     layers.Conv2D(32, filter_size, padding='same', input_shape=(img_height, img_width, 3), activation='relu'),
     layers.MaxPooling2D(pool_size=pool_size),
     layers.Conv2D(64, filter_size2, padding='same', activation='relu'),
+    layers.MaxPooling2D(pool_size=pool_size),
+    layers.Conv2D(128, filter_size2, padding='same', activation='relu'),
     layers.MaxPooling2D(pool_size=pool_size),
     layers.Flatten(),
     layers.Dense(256, activation='relu'),
@@ -44,10 +46,10 @@ model = Sequential([
     layers.Dense(num_classes, activation='softmax')
 ])
 
-# Compilación del modelo
+# model compilation
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# Entrenando al modelo
+# training module
 model.fit(image_train_data, epochs=epochs, validation_data=image_vali_data, steps_per_epoch=steps_per_epoch,
           validation_steps=validation_steps)
 
